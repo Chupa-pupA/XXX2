@@ -1,6 +1,3 @@
-import random
-
-
 shape_scores = {"X": 1, "Y": 2, "Z": 3}  # X - Камінь (1), Y - Папір (2), Z - Ножиці (3)
 
 
@@ -17,40 +14,23 @@ outcomes = {
 }
 
 
-computer_choices = ["A", "B", "C"]
-
-
 total_score = 0
-round_number = 0
+try:
+    with open("strategy_guide.txt", "r") as file:
+        strategy_guide = file.readlines()
+    
+ 
+    for line in strategy_guide:
+        line = line.strip()  
+        if line:  
+            opponent, you = line.split(" ")
+         
+            round_score = shape_scores[you] + outcomes[f"{opponent} {you}"]
+            total_score += round_score
 
-print("Граємо в Камінь, Папір, Ножиці!")
-print("Вводь: X (Камінь), Y (Папір), Z (Ножиці). Для завершення введи 'stop'.")
+    print(f"Загальна сума очок: {total_score}")
 
-while True:
-    user_choice = input("Твій вибір (X/Y/Z або 'stop'): ").upper()
-    
-    if user_choice == "STOP":
-        break
-    
-    if user_choice not in shape_scores:
-        print("Неправильний вибір! Введи X, Y або Z.")
-        continue
-    
-    computer_choice = random.choice(computer_choices)
-    round_number += 1
-    
-    round_key = f"{computer_choice} {user_choice}"
-    shape_score = shape_scores[user_choice]
-    outcome_score = outcomes[round_key]
-    round_score = shape_score + outcome_score
-    
-    total_score += round_score
-    
-    print(f"\nРаунд {round_number}:")
-    print(f"Комп'ютер вибрав: {computer_choice}")
-    print(f"Ти вибрав: {user_choice}")
-    print(f"Результат: {'Ти виграв!' if outcome_score == 6 else 'Нічия!' if outcome_score == 3 else 'Ти програв!'}")
-    print(f"Очки за раунд: {shape_score} (фігура) + {outcome_score} (результат) = {round_score}")
-    print(f"Загальні очки: {total_score}")
-
-print(f"\nГра завершена! Твій підсумковий результат: {total_score} очок за {round_number} раундів.")
+except FileNotFoundError:
+    print("Помилка: Файл 'strategy_guide.txt' не знайдено. Переконайтеся, що файл існує в цій директорії.")
+except Exception as e:
+    print(f"Виникла помилка: {e}")
